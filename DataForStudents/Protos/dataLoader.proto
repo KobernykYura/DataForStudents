@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+package BSU.DataLoader;
+option csharp_namespace = "DataForStudents";
+
+// Сервис, ответственный за передачу данных клиенту.
+service DataLoader {
+  
+  // Возвращает данные целиком. Один запрос - один ответ.
+  rpc FetchData (TaskDataRequest) returns (TaskDataReply);
+  
+  // Сервер возвращает клиенту поток для чтения.
+  rpc FetchDataAsStream (TaskDataRequest) returns (stream TaskDataReply);
+}
+
+// Тип объекта запроса данных клиентом для идентификации данных.
+message TaskDataRequest {
+  string taskId = 1;
+  string academicDisciplineId = 2;
+}
+
+// Возвращаемые данные для анализа.
+message TaskDataReply {
+  string data = 1;
+  string dataFormat = 2;
+}
