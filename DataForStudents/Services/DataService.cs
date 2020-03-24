@@ -32,9 +32,9 @@ namespace DataForStudents.Services
 			}
 			catch (System.Exception ex)
 			{
-				this._logger.LogError(ex, "Что-то не так при чтении файла!");
-				throw;
+				this._logger.LogError(ex, "Something is wrong while reading a file!");
 			}
+			return new TaskDataReply { Data = "ERROR" };
 		}
 
 		/// <summary>
@@ -52,8 +52,9 @@ namespace DataForStudents.Services
 			}
 			catch (System.Exception ex)
 			{
-				this._logger.LogError(ex, "Что-то не так при чтении файла!");
-				throw;
+				this._logger.LogError(ex, "Something is wrong while reading a file!");
+
+				await responseStream.WriteAsync(new TaskDataReply { Data = "ERROR" });
 			}
 		}
 	}

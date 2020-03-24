@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace DataForStudents.Storage
 {
@@ -12,28 +13,39 @@ namespace DataForStudents.Storage
 		/// <summary>
 		/// Шаблон пути к файлу с данными.
 		/// </summary>
-		const string fileUrl = "C:\\Users\\kober\\OneDrive\\Дакументы\\{0}\\{1}\\WritableFile.txt";
+		const string fileUri = @"\StatisticData\{0}\{1}.csv";
+
+		private readonly string currentDirectory;
+
+		public DataAccess()
+		{
+			this.currentDirectory = Directory.GetCurrentDirectory();
+		}
 
 		/// <summary>
 		/// Полное чтение файла, возвращеие полного текста файла.
 		/// </summary>
-		public async Task<string> Read(string discipline = "BigData_R", string task = "Lab1")
+		public async Task<string> Read(string discipline = "Lab1", string task = "001")
 		{
-			string filePath = string.Format(fileUrl, discipline, task);
-			if (!File.Exists(filePath))
-				throw new FileNotFoundException($"Файл -- {filePath} -- НЕНАЙДЕН!");
+			StringBuilder builder = new StringBuilder(this.currentDirectory);
+			string filePath = builder.AppendFormat(fileUri, discipline, task).ToString();
 
-			return await File.ReadAllTextAsync(fileUrl);
+			if (!File.Exists(filePath))
+				throw new FileNotFoundException($"File -- {filePath} -- NOT FOUND!");
+
+			return await File.ReadAllTextAsync(filePath);
 		}
 
 		/// <summary>
 		/// Возвращение коллекции строк файла.
 		/// </summary>
-		public async Task<ICollection<string>> ReadLines(string discipline = "BigData_R", string task = "Lab1")
+		public async Task<ICollection<string>> ReadLines(string discipline = "Lab1", string task = "001")
 		{
-			string filePath = string.Format(fileUrl, discipline, task);
+			StringBuilder builder = new StringBuilder(this.currentDirectory);
+			string filePath = builder.AppendFormat(fileUri, discipline, task).ToString();
+
 			if (!File.Exists(filePath))
-				throw new FileNotFoundException($"Файл -- {filePath} -- НЕНАЙДЕН!");
+				throw new FileNotFoundException($"File -- {filePath} -- NOT FOUND!");
 
 			return await File.ReadAllLinesAsync(filePath);
 		}
